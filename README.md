@@ -138,4 +138,14 @@ terminate called after throwing an instance of 'cv::Exception'
           
               continue;
           }
+
+
+
+
+  Import pair No 32
+  Pair No 32: Loaded images L=640x480 R=640x480
+  find on resized: retL=1 retR=1 cornersL=54 cornersR=54
+  FINAL: retL=1 retR=1 usedCornersL=54 usedCornersR=54
+  Pair No 32: ACCEPTED
+
           
