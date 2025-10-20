@@ -148,4 +148,58 @@ terminate called after throwing an instance of 'cv::Exception'
   FINAL: retL=1 retR=1 usedCornersL=54 usedCornersR=54
   Pair No 32: ACCEPTED
 
-          
+
+
+
+
+      for (int i = 0; i <= 1; i++)
+      {
+          if (i == 0)
+              right_or_left = "left";
+          else
+              right_or_left = "right";
+      
+          cv::FileStorage fs(calibration_data_folder + "calibration_camera_" + std::to_string(img_height) + "_" + right_or_left + ".yml", cv::FileStorage::READ);
+          if (fs.isOpened())
+          {
+              cv::Mat map1, map2;
+              fs["map1"] >> map1;
+              fs["map2"] >> map2;
+      
+              //  ⚠️  ВАЖНО: читаем objpoints только один раз
+              if (right_or_left == "left")
+                  fs["objpoints"] >> objectPoints;
+      
+              if (right_or_left == "left")
+              {
+                  fs["imgpoints"] >> leftImagePoints;
+                  fs["camera_matrix"] >> leftCameraMatrix;
+                  fs["distortion_coeff"] >> leftDistortionCoefficients;
+              }
+              else
+              {
+                  fs["imgpoints"] >> rightImagePoints;
+                  fs["camera_matrix"] >> rightCameraMatrix;
+                  fs["distortion_coeff"] >> rightDistortionCoefficients;
+              }
+              fs.release();
+          }
+          else
+          {
+              fprintf(stderr, "Camera calibration data not found in cache.\n");
+              return false;
+          }
+      }
+
+
+
+
+leftCameraMatrix.convertTo(leftCameraMatrix, CV_64F);
+rightCameraMatrix.convertTo(rightCameraMatrix, CV_64F);
+leftDistortionCoefficients.convertTo(leftDistortionCoefficients, CV_64F);
+rightDistortionCoefficients.convertTo(rightDistortionCoefficients, CV_64F);
+
+
+int fisheyeFlags = cv::fisheye::CALIB_FIX_INTRINSIC; // временно фиксируем внутренние параметры
+
+
